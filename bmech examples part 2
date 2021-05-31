@@ -1,0 +1,42 @@
+from ut import *
+import bmesh
+
+if str((bpy.context.object))!='None': # Checking if there is activated object
+    mode('OBJECT') # if there isn't we are not in active mode for sure  
+delete_all()
+
+# Create a cube and rotate a face around the y-axis                  
+
+create.cube('cube1')
+spec.location('cube1',[-3,0,0])
+mode('EDIT')
+
+
+bpy.ops.mesh.select_mode(type = "FACE")
+bm = bmesh.from_edit_mesh(bpy.context.object.data)
+
+bm.faces.ensure_lookup_table()
+
+'''
+Selecting the top face and subdivide it with 1 cut. That means
+divide it to 4 faces. If we select 2 cuts it will divide it 
+to 9 faces.
+'''
+bm.faces[5].select = True
+bpy.ops.mesh.subdivide(number_cuts = 1)
+
+bpy.ops.mesh.select_all(action="DESELECT")
+bm.faces.ensure_lookup_table()
+
+'''
+Selecting one of the faces
+'''
+bm.faces[0].select = True
+
+'''
+And translate the location of it - only Z axis
+'''
+bpy.ops.transform.translate(value = (0, 0,0.5))
+
+
+mode('OBJECT')
